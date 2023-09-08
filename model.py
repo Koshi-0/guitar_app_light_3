@@ -6,6 +6,7 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 import os
+import io
 
 # 学習済みモデルに合わせた前処理を追加
 transform = transforms.Compose([
@@ -61,13 +62,13 @@ def getName(label):
     return chord_names[label]
 
 # 推論
-def inference_cnn(img_path, model_path=os.path.join('.', 'M7&m7.pt')):
+def inference_cnn(img_file, model_path=os.path.join('.', 'M7&m7.pt')):
     # モデルの初期化と読み込み
     net = Net().cpu().eval()
     net.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 
     #　データの前処理
-    img = Image.open(img_path).convert("RGB")
+    img = Image.open(img_file.stream).convert("RGB")
     img = transform(img)
     img = img.unsqueeze(0) # 1次元増やす
 
